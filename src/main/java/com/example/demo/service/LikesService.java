@@ -5,22 +5,16 @@ import com.example.demo.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.StreamSupport;
-
 @Service
-public class PostService {
+public class LikesService {
 
     @Autowired
     private PostRepository postRepository;
 
-    public List<Post> listAllPosts() {
-        return StreamSupport.stream(postRepository.findAll().spliterator(), false).toList();
-    }
-
-    public void create(String text) {
-        Post post = new Post(null, text, new Date());
+    public Integer like(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        post.setLikes(post.getLikes() + 1);
         postRepository.save(post);
+        return post.getLikes();
     }
 }
